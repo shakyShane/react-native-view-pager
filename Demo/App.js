@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import ViewPager from '@ldn0x7dc/react-native-view-pager';
+import FlatListViewPager from './FlatListViewPager'
 
 export default class App extends Component {
 
@@ -24,7 +25,7 @@ export default class App extends Component {
   render() {
     return (
       <View style={{flex: 1}}>
-        <ViewPager
+        <FlatListViewPager
           ref='viewPager'
           style={{flex: 1, backgroundColor: 'white'}}
           renderPage={this.renderPage.bind(this)}
