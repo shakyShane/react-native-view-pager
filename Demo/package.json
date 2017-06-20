@@ -6,7 +6,7 @@
     "start": "node_modules/react-native/packager/packager.sh"
   },
   "dependencies": {
-    "@ldn0x7dc/react-native-view-pager": "0.0.9",
+    "@guangmingzizai/react-native-view-pager": "file:../",
     "react": "^16.0.0-alpha.6",
     "react-native": "^0.44.0"
   }

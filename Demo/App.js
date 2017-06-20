@@ -9,8 +9,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-import ViewPager from '@ldn0x7dc/react-native-view-pager';
-import FlatListViewPager from './FlatListViewPager'
+import { FlatListViewPager } from '@guangmingzizai/react-native-view-pager';
 
 export default class App extends Component {
 
