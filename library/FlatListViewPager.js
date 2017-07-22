@@ -4,7 +4,7 @@ import {
   FlatList,
   Platform
 } from 'react-native';
-
+import _ from 'lodash';
 import Scroller from 'react-native-scroller';
 import {createResponder} from 'react-native-gesture-responder';
 import TimerMixin from 'react-timer-mixin';
@@ -13,9 +13,9 @@ import reactMixin from 'react-mixin';
 const MIN_FLING_VELOCITY = 0.5;
 
 const FLAT_LIST_VIEWABILITY_CONFIG = {
-  minimumViewTime: 3000,
-  viewAreaCoveragePercentThreshold: 100,
-  waitForInteraction: true,
+  minimumViewTime: 500,
+  viewAreaCoveragePercentThreshold: 80,
+  // waitForInteraction: true,
 };
 
 export default class FlatListViewPager extends Component {
@@ -54,6 +54,7 @@ export default class FlatListViewPager extends Component {
       width: 0,
       height: 0,
       pageDataArray: props.pageDataArray,
+      viewable: []
     }
 
     this.scroller = new Scroller(true, (dx, dy, scroller) => {
@@ -133,6 +134,7 @@ export default class FlatListViewPager extends Component {
           debug={false}
           disableVirtualization={true}
           viewabilityConfig={FLAT_LIST_VIEWABILITY_CONFIG}
+          onViewableItemsChanged={this._onViewableItemsChanged}
         />
       </View>
     );
@@ -142,9 +144,28 @@ export default class FlatListViewPager extends Component {
     `${index}`
   );
 
+  _getMappedKeys = (array) => array.map(x => x.item.id);
+
+  _onViewableItemsChanged = (info) => {
+      const newViewableItems = this._getMappedKeys(info.viewableItems);
+      if (newViewableItems.length && !_.isEqual(newViewableItems, this.state.viewable)) {
+          this.setState({ viewable: newViewableItems });
+      }
+  };
+
   renderItem({item, index}) {
     const {width, height} = this.state;
-    let page = this.props.renderPage(item, index, {width, height});
+    const currentImageId = this.state.viewable[0];
+    let visible = false;
+    const {id} = item;
+
+    if (typeof currentImageId !== 'undefined') {
+      if (currentImageId === item.id) {
+        visible = true;
+      }
+    }
+
+    let page = this.props.renderPage(item, index, {width, height}, visible);
 
     let newProps = {
       ...page.props,
